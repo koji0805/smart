@@ -1,0 +1,6 @@
+<h1>Indexページです</h1>
+<form method="POST">
+{% csrf_token %}
+{{ food_form.as_p }}
+<button type="submit">保存</button>
+</form>

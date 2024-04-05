@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>食品登録 | 食べログ風デザイン</title>
+    <!-- Bootstrap CSSの読み込み -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> <!-- [1] -->
+    <style>
+        body {
+            background-color: #f7f7f7;
+        }
+        .navbar {
+            background-color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0,0,0,.1);
+        }
+        .container {
+            padding-top: 2rem;
+        }
+        .form-container {
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,.1);
+        }
+        .btn-custom {
+            background-color: #e47d31;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        .btn-custom:hover {
+            background-color: #cf711f;
+        }
+        .footer {
+            background-color: #343a40;
+            color: #fff;
+            padding: 1rem 0;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'food:list_foods' %}">スマート食品在庫管理アプリ</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="form-container">
+                    <h2 class="text-center mb-4">食品登録</h2>
+                    <form method="post" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <div class="form-group d-flex justify-content-between">
+                            <button type="submit" class="btn btn-custom">保存</button>
+                            <a href="{% url 'food:list_foods' %}" class="btn btn-custom">マイページへ</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container text-center">
+            <span>© 2024 スマート食品在庫管理アプリ</span>
+        </div>
+    </footer>
+
+    <!-- BootstrapのJavaScriptと依存関係のあるJavaScriptの読み込み -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script> <!-- [2] -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.9.9/dist/umd/popper.min.js"></script> <!-- [3] -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> <!-- [1] -->
+</body>
+</html>
