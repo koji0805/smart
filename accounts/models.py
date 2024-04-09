@@ -4,19 +4,31 @@ from django.contrib.auth.models import (
 )
 from django.urls import reverse_lazy
 
-
 class UserManager(BaseUserManager):
-    def create_user(self, username, email, password=None):
+    def create_user(self, email, username, password=None):
         if not email:
-            raise ValueError('Enter Email')
+            raise ValueError('An email address is required.')
         user = self.model(
+            email=self.normalize_email(email),  # Emailを正規化
             username=username,
-            email=email
         )
         user.set_password(password)
         user.save(using=self._db)
         return user
 
+    def create_superuser(self, email, username, password=None):
+        """
+        Creates and saves a superuser with the given email, username, and password.
+        """
+        user = self.create_user(
+            email,
+            password=password,
+            username=username,
+        )
+        user.is_staff = True
+        user.is_superuser = True
+        user.save(using=self._db)
+        return user
 
 class Users(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=150)

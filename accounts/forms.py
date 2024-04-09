@@ -1,25 +1,29 @@
 from django import forms
-from .models import Users
+from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth.models import User
 from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth import get_user_model
+
+User = get_user_model() 
 
 class RegistForm(forms.ModelForm):
     username = forms.CharField(label='名前')
-    age = forms.IntegerField(label='年齢', min_value=0)
     email = forms.EmailField(label='メールアドレス')
     password = forms.CharField(label='パスワード', widget=forms.PasswordInput())
 
     class Meta:
-        model = Users
-        fields = ['username', 'age', 'email', 'password']
+        model = User
+        fields = ['username', 'email', 'password']
     
-    def save(self, commit=False):
+    def save(self, commit=True):
         user = super().save(commit=False)
-        validate_password(self.cleaned_data['password'], user)
-        user.set_password(self.cleaned_data['password'])
-        user.save()
+        password = self.cleaned_data.get('password')
+        if password:
+            validate_password(password, user)
+            user.set_password(password)
+            if commit:
+                user.save()
         return user
 
 class UserLoginForm(AuthenticationForm):
@@ -27,18 +31,14 @@ class UserLoginForm(AuthenticationForm):
     password = forms.CharField(label='パスワード', widget=forms.PasswordInput())
     remember = forms.BooleanField(label='ログイン状態を保持する', required=False)
 
-from django import forms
-from django.contrib.auth.models import User
-
 class UserUpdateForm(forms.ModelForm):
     username = forms.CharField(label='ユーザー名')
     email = forms.EmailField(label='メールアドレス')
-    age = forms.IntegerField(label='年齢', min_value=0)
-    password = forms.CharField(label='パスワード', widget=forms.PasswordInput())
+    password = forms.CharField(label='パスワード', widget=forms.PasswordInput(), required=False)
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'age', 'password']
+        fields = ['username', 'email', 'password']
 
     def clean_password(self):
         password = self.cleaned_data.get('password')
@@ -46,23 +46,15 @@ class UserUpdateForm(forms.ModelForm):
             validate_password(password)
         return password
 
-    def save(self, commit=True):
-        user = super().save(commit=False)
-        password = self.cleaned_data.get('password')
-        if password:
-            user.set_password(password)
-        if commit:
-            user.save()
-        return user
-
-    def save(self, commit=True, request=None):  # request引数を追加
+    def save(self, commit=True, request=None):
         user = super().save(commit=False)
         password = self.cleaned_data.get('password')
         if password:
             user.set_password(password)
             if commit:
                 user.save()
-                if request:  # requestが提供されている場合のみセッションを更新
+                # パスワードが更新された場合、セッションの認証情報も更新する
+                if request:
                     update_session_auth_hash(request, user)
         else:
             if commit:

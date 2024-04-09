@@ -55,15 +55,16 @@ class FoodDetailView(DetailView):
     return context
   
 class FoodListView(ListView):
-  model = Foods
-  template_name = "food/food_list.html"
-  
-  def get_queryset(self):
-    qs = super().get_queryset()
-    if "name" in self.kwargs:
-      qs = qs.filter(name__startswith=self.kwargs["name"])
-    qs = qs.order_by("expirydate")
-    return qs
+    model = Foods
+    template_name = "food/food_list.html"
+    
+    def get_queryset(self):
+        # ログインしているユーザーに紐付いた食品データのみを返す
+       if self.request.user.is_authenticated:
+          return Foods.objects.filter(user=self.request.user).order_by("expirydate")
+       else:
+          # 未ログインの場合は空のクエリセットを返す（あるいはログインページへのリダイレクトなど）
+          return Foods.objects.none()
   
 class FoodCreateView(CreateView):
   model = Foods
@@ -72,9 +73,8 @@ class FoodCreateView(CreateView):
   success_url = reverse_lazy("food:list_foods")
   
   def form_valid(self, form):
-    form.instance.create_at = datetime.now()
-    form.instance.update_at = datetime.now()
-    return super().form_valid(form)
+      form.instance.user = self.request.user  # 現在ログインしているユーザーを食品に紐付ける
+      return super().form_valid(form)
   
   def get_initial(self, **kwargs):
     initial = super().get_initial(**kwargs)

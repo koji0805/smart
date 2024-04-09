@@ -2,6 +2,7 @@ from django.db import models
 from django.urls import reverse_lazy
 from django.dispatch import receiver
 import os
+from django.conf import settings
 
 class BaseModel(models.Model):
     create_at = models.DateTimeField(auto_now_add=True)  # 自動で作成時刻を記録
@@ -38,6 +39,7 @@ class Foods(BaseModel):
     )
     expirydate = models.DateField()
     quantity = models.IntegerField()
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True) 
 
     class Meta:
         db_table = 'foods'
