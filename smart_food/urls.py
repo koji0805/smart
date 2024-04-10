@@ -1,12 +1,12 @@
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include  # includeをインポート
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('accounts/', include('accounts.urls')),
-    path('food/', include('food.urls')),
+    path('', include(('accounts.urls', 'accounts'), namespace='accounts')),
+    path('food/', include(('food.urls', 'food'), namespace='food')),
 ]
 
 if settings.DEBUG:
