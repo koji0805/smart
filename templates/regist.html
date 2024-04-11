@@ -1,17 +1,16 @@
-{% block content %}
 <!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
     <title>ユーザ登録 | 食べログ風デザイン</title>
     <!-- Bootstrap CSSの読み込み -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> <!-- [1] -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
             background-color: #f7f7f7;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
         }
         .header {
             background-color: #e47d31;
@@ -27,6 +26,8 @@
             padding: 2rem;
             border-radius: 5px;
             box-shadow: 0 2px 4px rgba(0,0,0,.1);
+            max-width: 300px; /* フォームコンテナの最大幅を調整 */
+            margin: auto; /* 中央寄せ */
         }
         .btn-custom {
             background-color: #e47d31;
@@ -44,18 +45,39 @@
             color: #fff;
             padding: 1rem 0;
             width: 100%;
+            margin-top: auto; /* フッターをページの底部に配置 */
+        }
+        .error-message {
+            color: red; /* エラーメッセージの色を赤に設定 */
+        }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%; /* 入力要素を親要素の幅に合わせて広げる */
+            max-width: 100%; /* 入力要素の最大幅を親要素の幅に合わせる */
+        }
+        .form-group {
+            margin-bottom: 1.5rem; /* フォームグループ間の余白を調整 */
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-6">
+            <div class="col-lg-8 col-md-10">
                 <div class="form-container">
                     <h2 class="text-center mb-4">ユーザ登録</h2>
                     <form method="POST">
                         {% csrf_token %}
-                        {{ form.as_p }}
+                        {% for field in form %}
+                            <div class="form-group">
+                                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                {{ field }}
+                                {% if field.errors %}
+                                    {% for error in field.errors %}
+                                        <div class="error-message">{{ error }}</div>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        {% endfor %}
                         <div class="form-group d-flex justify-content-between">
                             <button type="submit" class="btn btn-custom">ユーザ登録</button>
                             <a href="{% url 'accounts:home' %}" class="btn btn-custom">トップへ</a>
@@ -71,8 +93,8 @@
     </footer>
 
     <!-- BootstrapのJavaScriptと依存関係のあるJavaScriptの読み込み -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script> <!-- [2] -->
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.9.9/dist/umd/popper.min.js"></script> <!-- [3] -->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> <!-- [1] -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.9.9/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
-{% endblock %}
+</html>

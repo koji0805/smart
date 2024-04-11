@@ -14,10 +14,14 @@ class FoodForm(forms.ModelForm):
             'quantity': _('残量'),
         }
         widgets = {
+            'name': forms.TextInput(attrs={'placeholder': _('入力してください')}),
             'expirydate': forms.DateInput(format=('%Y-%m-%d'), attrs={'type': 'date'}),
         }
 
-    # saveメソッドの定義...
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs.update({'class': 'form-control'})
 
 class FoodUpdateForm(forms.ModelForm):
     class Meta:
@@ -33,12 +37,20 @@ class FoodUpdateForm(forms.ModelForm):
             'expirydate': forms.DateInput(format=('%Y-%m-%d'), attrs={'type': 'date'}),
         }
 
-    # saveメソッドの定義...
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs.update({'class': 'form-control'})
 
 class PictureUploadForm(forms.ModelForm):
     class Meta:
         model = Pictures
         fields = ['picture']
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs.update({'class': 'form-control'})
 
     def save(self, commit=True, food=None):
         instance = super(PictureUploadForm, self).save(commit=False)

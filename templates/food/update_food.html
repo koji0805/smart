@@ -8,6 +8,9 @@
     <style>
         body {
             background-color: #f7f7f7;
+            min-height: 100vh; /* 画面の高さいっぱいに */
+            display: flex;
+            flex-direction: column;
         }
         .navbar {
             background-color: #ffffff;
@@ -15,12 +18,15 @@
         }
         .container {
             padding-top: 2rem;
+            flex: 1; /* フォームを画面いっぱいに広げるために必要 */
         }
         .form-container {
             background-color: #fff;
             padding: 2rem;
             border-radius: 5px;
             box-shadow: 0 2px 4px rgba(0,0,0,.1);
+            max-width: 350px;
+            margin: auto; /* 水平方向に中央寄せ */
         }
         .btn-custom {
             background-color: #e47d31;
@@ -37,22 +43,12 @@
             background-color: #343a40;
             color: #fff;
             padding: 1rem 0;
-            margin-top: 2rem;
+            margin-top: auto; /* フッターを下部に配置 */
         }
-        img:hover {
-            opacity: 0.6;
-            cursor: pointer;
-        }
-        .image-gallery {
-            margin-bottom: 1rem;
-        }
-        .image-gallery img {
-            margin-right: 0.5rem;
+        .form-group label {
+            display: block;
+            width: 100%; /* ラベルの横幅を統一 */
             margin-bottom: 0.5rem;
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
-            border-radius: 5px;
         }
     </style>
 </head>
@@ -69,7 +65,7 @@
                 <div class="form-container">
                     <h2 class="text-center mb-4">食品更新</h2>
                     {% if messages %}
-                    <div class="alert alert-success" role="alert">
+                    <div class="alert alert-danger" role="alert">
                         {% for message in messages %}
                             {{ message.message }}
                         {% endfor %}
@@ -77,15 +73,22 @@
                     {% endif %}
                     <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
                         {% csrf_token %}
-                        {{ form.as_p }}
-                        <hr>
-                        <div class="image-gallery">
-                            {% for picture in pictures %}
-                                <img width="100px" height="100px" src="{{ picture.picture.url }}">
-                                <a href="{% url 'food:delete_picture' pk=picture.id %}"></a>
-                            {% endfor %}
+                        <div class="form-group">
+                            <label for="id_name">食品名</label>
+                            {{ form.name }}
                         </div>
-                        {{ picture_form.as_p }}
+                        <div class="form-group">
+                            <label for="id_category">カテゴリ</label>
+                            {{ form.category }}
+                        </div>
+                        <div class="form-group">
+                            <label for="id_expirydate">保存期限</label>
+                            {{ form.expirydate }}
+                        </div>
+                        <div class="form-group">
+                            <label for="id_quantity">残量</label>
+                            {{ form.quantity }}
+                        </div>
                         <div class="form-group d-flex justify-content-between">
                             <button type="submit" class="btn btn-custom">更新</button>
                             <a href="{% url 'food:list_foods' %}" class="btn btn-custom">マイページへ</a>

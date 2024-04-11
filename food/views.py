@@ -18,6 +18,8 @@ from django.urls import reverse_lazy
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
 from . import forms
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponseRedirect
 
 class IndexView(View):
   
@@ -66,20 +68,21 @@ class FoodListView(ListView):
           # 未ログインの場合は空のクエリセットを返す（あるいはログインページへのリダイレクトなど）
           return Foods.objects.none()
   
-class FoodCreateView(CreateView):
-  model = Foods
-  form_class = FoodForm  # 修正されたインスタンス化
-  template_name = "food/add_food.html"
-  success_url = reverse_lazy("food:list_foods")
-  
-  def form_valid(self, form):
-      form.instance.user = self.request.user  # 現在ログインしているユーザーを食品に紐付ける
-      return super().form_valid(form)
-  
-  def get_initial(self, **kwargs):
-    initial = super().get_initial(**kwargs)
-    initial["name"] = "sample"
-    return initial
+class FoodCreateView(LoginRequiredMixin, CreateView):
+    model = Foods
+    form_class = FoodForm
+    template_name = "food/add_food.html"
+    success_url = reverse_lazy("food:list_foods")
+    login_url = reverse_lazy('accounts:user_login')  # ログインページのURLを指定
+
+    def form_valid(self, form):
+        if not self.request.user.is_authenticated:
+            # ユーザーがログインしていない場合の処理
+            # ここではログインページにリダイレクトする例を示します
+            return HttpResponseRedirect(self.login_url)
+        
+        form.instance.user = self.request.user  # 現在ログインしているユーザーを食品に紐付ける
+        return super().form_valid(form)
   
 class FoodUpdateView(SuccessMessageMixin, UpdateView):
   template_name = "food/update_food.html"
