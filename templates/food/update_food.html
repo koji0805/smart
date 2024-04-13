@@ -91,6 +91,13 @@
                         <div class="form-group">
                             <label for="id_quantity">残量</label>
                             {{ form.quantity }}
+                            {% if form.quantity.errors %}
+                               <div class="error-message">
+                                 {% for error in form.quantity.errors %}
+                                   {{ error }}
+                                 {% endfor %}
+                               </div>
+                            {% endif %}
                         </div>
                         <div class="form-group d-flex justify-content-between">
                             <button type="submit" class="btn btn-custom">更新</button>
