@@ -2,6 +2,7 @@ from django import forms
 from django.utils.translation import gettext_lazy as _  
 from .models import Foods, Pictures
 from datetime import datetime
+from django.core.exceptions import ValidationError
 
 class FoodForm(forms.ModelForm):
     class Meta:
@@ -23,6 +24,18 @@ class FoodForm(forms.ModelForm):
         for field in self.fields.values():
             field.widget.attrs.update({'class': 'form-control'})
 
+    def clean_expirydate(self):
+        expirydate = self.cleaned_data.get('expirydate')
+        if expirydate and expirydate < datetime.today().date(): 
+            raise ValidationError(_('保存期限は過去の日付にできません。'))
+        return expirydate
+
+    def clean_quantity(self):
+        quantity = self.cleaned_data.get('quantity')
+        if quantity is not None and quantity <= 0:
+            raise ValidationError(_('残量は正の数でなければなりません。'))
+        return quantity
+
 class FoodUpdateForm(forms.ModelForm):
     class Meta:
         model = Foods
@@ -42,11 +55,23 @@ class FoodUpdateForm(forms.ModelForm):
         for field in self.fields.values():
             field.widget.attrs.update({'class': 'form-control'})
 
+    def clean_expirydate(self):
+        expirydate = self.cleaned_data.get('expirydate')
+        if expirydate and expirydate < datetime.today().date():
+            raise ValidationError(_('保存期限は過去の日付にできません。'))
+        return expirydate
+
+    def clean_quantity(self):
+        quantity = self.cleaned_data.get('quantity')
+        if quantity is not None and quantity <= 0:
+            raise ValidationError(_('残量は正の数でなければなりません。'))
+        return quantity
+
 class PictureUploadForm(forms.ModelForm):
     class Meta:
         model = Pictures
         fields = ['picture']
-        
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in self.fields.values():

@@ -30,13 +30,12 @@ class IndexView(View):
     })
     
   def post(self, request, *args, **kwargs):
-    food_form = FoodForm(request.POST or None)  # 修正されたインスタンス化
+    food_form = FoodForm(request.POST or None)
     if food_form.is_valid():
-      food_form.save()
-      return redirect("food:list_foods")
-    return render(request, "index.html", context={
-      "food_form": food_form,
-    })
+        food_form.save()
+        return redirect("food:list_foods")
+    else:
+      return render(request, "index.html", {"food_form": food_form})
     
 class HomeView(TemplateView):
   

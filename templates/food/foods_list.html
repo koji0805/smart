@@ -60,6 +60,9 @@
             bottom: 0;
             width: 100%;
         }
+        .error-message {
+        color: red; /* エラーメッセージの色を赤に設定 */
+       }
     </style>
 </head>
 <body>
@@ -105,7 +108,7 @@
             <h5 class="card-title">{{ object.name }}</h5>
             <p class="card-text">カテゴリ: {{ object.category }}</p>
             <p class="card-text">保存期限: {{ object.expirydate|date:"Y年n月j日" }}</p>
-            <p class="card-text">残量: {{ object.quantity }}%</p>
+            <p class="card-text">残量: {{ object.quantity }}個</p>
             <div class="btn-group">
                <a href="{% url 'food:edit_food' object.pk %}" class="btn btn-outline-secondary">編集</a>
                 <a href="{% url 'food:delete_food' object.pk %}" class="btn btn-outline-danger">削除</a>

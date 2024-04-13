@@ -45,6 +45,9 @@
             padding: 1rem 0;
             width: 100%;
         }
+        .error-message {
+        color: red; /* エラーメッセージの色を赤に設定 */
+       }
     </style>
 </head>
 <body>
@@ -55,7 +58,19 @@
                     <h2 class="text-center mb-4">ユーザー情報編集</h2>
                     <form method="post">
                         {% csrf_token %}
-                        {{ form.as_p }}
+                        {% for field in form %}
+                            <div class="form-group">
+                                {{ field.label_tag }}
+                                {{ field }}
+                                {% if field.errors %}
+                                    <div class="error-message">
+                                        {% for error in field.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
                         <div class="form-group d-flex justify-content-between">
                             <button type="submit" class="btn btn-custom">更新</button>
                             <a href="{% url 'food:list_foods' %}" class="btn btn-custom">マイページへ</a>

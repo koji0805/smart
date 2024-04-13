@@ -5,40 +5,56 @@
     <title>食品削除 | 食べログ風デザイン</title>
     <!-- Bootstrap CSSの読み込み -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> <!-- [1] -->
-    <style>
-        body {
-            background-color: #f7f7f7;
-        }
-        .navbar {
-            background-color: #ffffff;
-            box-shadow: 0 2px 4px rgba(0,0,0,.1);
-        }
-        .container {
-            padding-top: 2rem;
-        }
-        .form-container {
-            background-color: #fff;
-            padding: 2rem;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0,0,0,.1);
-        }
-        .btn-custom {
-            background-color: #e47d31;
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
-            font-size: 1rem;
-        }
-        .btn-custom:hover {
-            background-color: #cf711f;
-        }
-        .footer {
-            background-color: #343a40;
-            color: #fff;
-            padding: 1rem 0;
-            margin-top: 2rem;
-        }
+<style>
+    html, body {
+        height: 100%; /* この行を追加 */
+        margin: 0; /* この行を追加 */
+    }
+    body {
+        background-color: #f7f7f7;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh; /* この行を変更 */
+    }
+    .navbar {
+        background-color: #ffffff;
+        box-shadow: 0 2px 4px rgba(0,0,0,.1);
+    }
+    .container {
+        padding-top: 2rem;
+        flex: 1; /* この行を追加 */
+    }
+    .form-container {
+        background-color: #fff;
+        padding: 2rem;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0,0,0,.1);
+        max-width: 350px;
+        margin: auto;
+    }
+    .btn-custom {
+        background-color: #e47d31;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 5px;
+        font-size: 1rem;
+    }
+    .btn-custom:hover {
+        background-color: #cf711f;
+    }
+    .footer {
+        background-color: #343a40;
+        color: #fff;
+        padding: 1rem 0;
+        position: fixed; /* この行を追加 */
+        bottom: 0; /* この行を追加 */
+        width: 100%; /* この行を追加 */
+    }
+    .error-message {
+        color: red; /* エラーメッセージの色を赤に設定 */
+    }
+</style>
     </style>
 </head>
 <body>

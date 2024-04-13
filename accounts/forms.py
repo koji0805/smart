@@ -38,4 +38,4 @@ class RegistForm(forms.ModelForm):
 class UserLoginForm(AuthenticationForm):
     username = forms.EmailField(label='メールアドレス')
     password = forms.CharField(label='パスワード', widget=forms.PasswordInput())
-    remember = forms.BooleanField(label='ログイン状態を保持する', required=False)
+    remember = forms.BooleanField(label='ログイン状態を保持する', required=False, widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}))
